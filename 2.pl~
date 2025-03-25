@@ -1,0 +1,27 @@
+% Предикат для вычисления максимального количества подряд идущих положительных чисел в списке
+% max_consecutive_pos(+List, -Max)
+max_pos(List, Max) :-
+    max_pos(List, 0, 0, Max).
+
+% Если список пуст, выбираем максимум между текущей последовательностью и накопленным максимумом
+max_pos([], Curr, Max, Final) :-
+    Final is max(Curr, Max).
+
+% Если голова списка положительная, увеличиваем текущий счётчик и обновляем максимум
+max_pos([H|T], Curr, Max, Final) :-
+    H > 0,
+    NewCurr is Curr + 1,
+    NewMax is max(NewCurr, Max),
+    max_pos(T, NewCurr, NewMax, Final).
+
+% Если голова списка не положительная, сбрасываем текущий счётчик.
+max_pos([H|T], _Curr, Max, Final) :-
+    H =< 0,
+    max_pos(T, 0, Max, Final).
+
+% Функция ввода и вывода результата.
+input :-
+    write('Введите список чисел:'),
+    read(List),
+    max_pos(List, Max),
+    format('Максимальное количество подряд идущих положительных чисел: ~d~n', [Max]).
